@@ -1,0 +1,47 @@
+Sub 制作五书()
+﻿
+    Dim strDocName As String
+    Dim strFileExtension As String
+    strFileExtension = ActiveDocument.Name
+    Dim oDoc As Object
+    Dim oTbl As Object
+    Set oDoc = Documents.Open(ActiveDocument.FullName)
+    oDoc.Repaginate
+    Dim oSec As Object
+    Dim nStartPg As Integer
+    Dim nEndPg As Integer
+    Dim NumSections As Integer
+    NumSections = oDoc.Sections.Count
+    nStartPg = 1
+﻿
+If NumSections = 5 Then
+﻿
+For Each oSec In oDoc.Sections
+   nEndPg = oSec.Range.Information(3)
+   Select Case NumSections = 5
+   Case oSec.Index = 1
+   strDocName = "04说明书摘要.PDF"
+   Case oSec.Index = 2
+   strDocName = "03摘要附图.PDF"
+   Case oSec.Index = 3
+   strDocName = "01权利要求书.PDF"
+   Case oSec.Index = 4
+   strDocName = "02说明书.PDF"
+   Case oSec.Index = 5
+   strDocName = "05说明书附图.PDF"
+   End Select
+   strDocName = Replace(ActiveDocument.FullName, strFileExtension, strDocName)
+﻿
+   ActiveDocument.ExportAsFixedFormat OutputFileName:= _
+        strDocName, ExportFormat:=wdExportFormatPDF, OpenAfterExport:=False, OptimizeFor:= _
+        wdExportOptimizeForPrint, Range:=wdExportFromTo, From:=nStartPg, To:=nEndPg, Item:= _
+        wdExportDocumentContent, IncludeDocProps:=True, KeepIRM:=True, _
+        CreateBookmarks:=wdExportCreateNoBookmarks, DocStructureTags:=True, _
+        BitmapMissingFonts:=True, UseISO19005_1:=False
+   nStartPg = nEndPg + 1
+Next
+Else: MsgBox "分节符的个数出现错误，请仔细检查"
+End If
+If NumSections = 5 Then MsgBox "已生成PDF版五书"
+﻿
+        End Sub
